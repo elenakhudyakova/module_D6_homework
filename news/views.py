@@ -18,17 +18,20 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver, Signal
 
+
+
 class NewsList(ListView):
-  model = Post  # указываем модель, объекты которой мы будем выводить
-  template_name = 'news.html'  # указываем имя шаблона, в котором будет лежать HTML, в котором будут все инструкции о том, как именно пользователю должны вывестись наши объекты
-  context_object_name = 'news'  # это имя списка, в котором будут лежать все объекты, его надо указать, чтобы обратиться к самому списку объектов через HTML-шаблон
-  queryset = Post.objects.order_by('-dateCreation') # Сортируем от самой свежей по дате создания
+  model = Post
+  template_name = 'news.html'
+  context_object_name = 'news'
+  queryset = Post.objects.order_by('-dateCreation')
   paginate_by = 10
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['list_in_page'] = self.paginate_by
     return context
+
 
 class NewsItem(DetailView):
   model = Post
@@ -57,10 +60,11 @@ class Search(ListView):
     context['all_posts'] = Post.objects.all() # Для отображения общего кол-ва публикаций на сайте
     return context
 
+
 addpost = Signal(providing_args=['instance', 'category'])
 
 class CreatePost(PermissionRequiredMixin, CreateView):
-    permission_required = ('ewsn.add_post',)
+    permission_required = ('main_app.add_post',)
     model = Post
     template_name = 'create_post.html'
     form_class = PostForm
@@ -75,7 +79,7 @@ class CreatePost(PermissionRequiredMixin, CreateView):
 
 
 class EditPost(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
-  permission_required = ('news.change_post',)
+  permission_required = ('main_app.change_post',)
   template_name = 'edit_post.html'
   form_class = PostForm
 
@@ -112,8 +116,8 @@ def add_subscribe(request, pk):
 
     send_mail(
         subject=f'News Portal: {category_object_name}',
-        message=f'Добрый день, {request.user}! Вы подписались на уведомления о выходе новых статей в категории {category_object_name}',
-        from_email='newsportal272@gmail.com',
+        message=f'Добрый день {request.user}! Вы подписались на уведомления о выходе новых статей в категории {category_object_name}',
+        from_email='elkha775@gmail.com',
         recipient_list=[user.email, ],
     )
     return redirect(request.META.get('HTTP_REFERER'))
@@ -134,8 +138,8 @@ def del_subscribe(request, pk):
 
     send_mail(
         subject=f'News Portal: {category_object_name}',
-        message=f'Добрый день, {request.user}! Вы отменили уведомления о выходе новых статей в категории {category_object_name}. Нам очень жаль, что данная категория Вам не понравилась, ждем Вас снова на нашем портале!',
-        from_email='newsportal272@gmail.com',
+        message=f'Добрый день {request.user}! Вы отменили уведомления о выходе новых статей в категории {category_object_name}. Нам очень жаль, что данная категория Вам не понравилась, ждем Вас снова на нашем портале!',
+        from_email='elkha775@gmail.com',
         recipient_list=[user.email, ],
     )
     return redirect(request.META.get('HTTP_REFERER'))

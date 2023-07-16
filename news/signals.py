@@ -1,3 +1,4 @@
+
 from django.dispatch import receiver
 from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
@@ -16,8 +17,9 @@ def send_subscribe(instance, category, **kwargs):
             msg = EmailMultiAlternatives(
                 subject=f'News Portal: {category}',
                 body='',
-                from_email='newsportal272@gmail.com',
+                from_email='elkha775@gmail.com',
                 to=[user_email, ],
+                
             )
             msg.attach_alternative(html_content, "text/html")
             msg.send()

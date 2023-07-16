@@ -1,3 +1,4 @@
+# runapscheduler.py
 import logging
 
 from django.conf import settings
@@ -45,13 +46,10 @@ def my_job():
 
             send_mail(
                 subject=f'News Portal: посты за прошедшую неделю.',
-                message=f'Добрый день, {user}!\nознакомьтесь с новыми постами, появившимися за последние 7 дней:\n{list_posts}',
+                message=f'Доброго дня, {user}!\nПредлагаем Вам ознакомиться с новыми постами, появившимися за последние 7 дней:\n{list_posts}',
                 from_email='newsportal272@gmail.com',
                 recipient_list=[user.email, ],
             )
-
-
-
 
 # функция, которая будет удалять неактуальные задачи
 def delete_old_job_executions(max_age=604_800):

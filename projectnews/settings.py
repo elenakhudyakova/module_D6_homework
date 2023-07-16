@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4zx&=u!i&ll_x2^_ta3991#islft4f68w%d8ge)%7*qdr1od05
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1'] # 1
 
 
 # Application definition
@@ -44,24 +44,19 @@ INSTALLED_APPS = [
     'news',
     'django_filters',
     'bootstrap4',
+    'protected',
     'sign',
-    'main_app.apps.MainAppConfig',
-    'django_apscheduler',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.google',
+
+    'django_apscheduler'
 ]
 
-EMAIL_HOST_USER = "newsportal272@gmail.com"
-EMAIL_HOST_PASSWORD = "wetrewteferfggr12312"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_ID = 1
-
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
-APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,6 +70,21 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
+EMAIL_HOST_USER = 'elkha775'
+EMAIL_HOST_PASSWORD = 'poiry53!js'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+# формат даты, которую будет воспринимать наш задачник(вспоминаем урок по фильтрам) 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+ 
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
 ROOT_URLCONF = 'projectnews.urls'
 
 TEMPLATES = [
@@ -85,6 +95,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                # `allauth` needs this from django
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -100,13 +111,18 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_FORMS = {'signup': 'sign.forms.BaseRegisterForm'}
 
+
+if DEBUG:
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 WSGI_APPLICATION = 'projectnews.wsgi.application'
 
@@ -166,10 +182,5 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/account/login/' # 4
 LOGIN_REDIRECT_URL = '/'
-
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
