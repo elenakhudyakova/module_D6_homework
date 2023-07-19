@@ -55,7 +55,7 @@ class NewsItem(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         if user.is_authenticated:
-            subscribed_categories = user.objects.filter(categorysubscriber__subscriber=user)
+            subscribed_categories = User.objects.filter(categorysubscriber__subscriber=user)
             context['user_category'] = subscribed_categories
 
         return context
