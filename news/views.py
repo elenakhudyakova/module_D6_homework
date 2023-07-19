@@ -33,10 +33,32 @@ class NewsList(ListView):
     return context
 
 
+class NewsList(ListView):
+  model = Post
+  template_name = 'news.html'
+  context_object_name = 'news'
+  queryset = Post.objects.order_by('-dateCreation')
+  paginate_by = 10
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['list_in_page'] = self.paginate_by
+    return context
+
+
 class NewsItem(DetailView):
   model = Post
   template_name = 'news_item.html'
   context_object_name = 'news_item'
+
+  def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_authenticated:
+            subscribed_categories = user.objects.filter(categorysubscriber__subscriber=user)
+            context['user_category'] = subscribed_categories
+
+        return context
 
 
 class Search(ListView):
